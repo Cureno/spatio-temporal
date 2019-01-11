@@ -20,7 +20,10 @@ import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static javafx.scene.input.MouseEvent.*;
 
@@ -143,8 +146,36 @@ public class CoordinateSystemController implements Initializable {
                 }
             }
 
-
         });
+
+        drawRandomLines();
+    }
+
+
+    private void drawRandomLines() {
+
+        List<Circle> circles = coordinateSystem.getChildren().filtered(n -> n instanceof Circle)
+                                               .stream()
+                                               .map(Circle.class::cast)
+                                               .collect(Collectors.toList());
+
+        Random random = new Random();
+
+        for (int i = 0; i < 8; i++) {
+
+            Circle origin = circles.get(
+                    random.nextInt(circles.size())
+            );
+
+            Circle target = circles.get(
+                    random.nextInt(circles.size())
+            );
+
+
+            drawLine(origin);
+            drawLine(target);
+        }
+
     }
 
     private void drawLine(Circle pointClicked) {
