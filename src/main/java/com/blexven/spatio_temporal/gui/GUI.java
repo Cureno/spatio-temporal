@@ -19,12 +19,16 @@ public class GUI extends Application {
 
         Pane root = fxmlLoader.load();
 
-        Scene scene = new Scene(root, 640, 500);
+
+        int width = 1000;
+        int height = 800;
+
+        Scene scene = new Scene(root, width, height);
 
         stage.setScene(scene);
 
-        stage.setWidth(640);
-        stage.setHeight(500);
+        stage.setWidth(width);
+        stage.setHeight(height);
         stage.setTitle("Coordinate System");
         stage.show();
     }
