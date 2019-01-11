@@ -128,19 +128,32 @@ public class CoordinateSystemController implements Initializable {
                 if (c.wasAdded()) {
                     c.getAddedSubList().forEach(node -> {
                         if (node instanceof Line) {
-                            Line l = (Line) node;
-                            double startX = l.getStartX();
-                            double startY = l.getStartY();
+                            Line line = (Line) node;
+                            double startX = line.getStartX();
+                            double startY = line.getStartY();
 
                             SimpleStringProperty startPosition = new SimpleStringProperty("startX " + startX + ", startY " + startY + ", ");
 
                             Text textRepresentation = new Text();
 
                             textRepresentation.textProperty().bind(
-                                    startPosition.concat("endX ").concat(l.endXProperty()).concat(" endY ").concat(l.endYProperty()));
+                                    startPosition.concat("endX ").concat(line.endXProperty()).concat(" endY ").concat(line.endYProperty()));
 
 
                             listView.getItems().add(textRepresentation);
+
+                            textRepresentation.addEventHandler(MOUSE_ENTERED, event -> {
+                                line.setStroke(Color.RED);
+                            });
+
+                            textRepresentation.addEventHandler(MOUSE_EXITED, event -> {
+                                line.setStroke(Color.DARKBLUE);
+                            });
+
+                            textRepresentation.addEventHandler(MOUSE_CLICKED, event -> {
+                                coordinateSystem.getChildren().remove(line);
+                                listView.getItems().remove(textRepresentation);
+                            });
                         }
                     });
                 }
