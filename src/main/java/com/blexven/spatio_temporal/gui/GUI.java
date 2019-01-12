@@ -20,8 +20,8 @@ public class GUI extends Application {
         Pane root = fxmlLoader.load();
 
 
-        int width = 1000;
-        int height = 800;
+        int width = 1300;
+        int height = 900;
 
         Scene scene = new Scene(root, width, height);
 
