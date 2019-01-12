@@ -5,11 +5,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Side;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -17,6 +15,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -33,9 +32,10 @@ public class CoordinateSystemController implements Initializable {
     Pane coordinateSystem;
 
     @FXML
-    ListView listView;
+    ListView<Text> listView;
 
-    private ContextMenu contextMenu = new ContextMenu(new MenuItem("Helló"));
+    private Text infoBox = new Text("Info");
+
     private double distance = 30;
     private double r = 16;
     private Circle origin;
@@ -45,9 +45,18 @@ public class CoordinateSystemController implements Initializable {
     private DecimalFormat df = new DecimalFormat("#");
     private SimpleDoubleProperty mouseX = new SimpleDoubleProperty();
     private SimpleDoubleProperty mouseY = new SimpleDoubleProperty();
+    private int numberOfLines = 25;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        infoBox.setRotationAxis(Rotate.X_AXIS);
+        infoBox.setRotate(180);
+        coordinateSystem.getChildren().add(infoBox);
+        coordinateSystem.setCursor(Cursor.HAND);
+        coordinateSystem.setRotationAxis(Rotate.X_AXIS);
+        coordinateSystem.setRotate(180);
+
 
         coordinateSystem.addEventHandler(MOUSE_MOVED, e -> {
             mouseX.set(e.getX());
@@ -55,9 +64,7 @@ public class CoordinateSystemController implements Initializable {
         });
 
 
-        for (int i = gridStart; i < 20; i++) {
-
-            distance = 30;
+        for (int i = gridStart; i < numberOfLines; i++) {
 
             Line horizontal = new Line(0, i * distance, coordinateSystem.getWidth(), i * distance);
             horizontal.endXProperty().bind(coordinateSystem.widthProperty());
@@ -66,33 +73,27 @@ public class CoordinateSystemController implements Initializable {
             Line vertical = new Line(i * distance, 0, i * distance, coordinateSystem.getHeight());
             vertical.endYProperty().bind(coordinateSystem.heightProperty());
 
+            horizontal.setStroke(Color.LIGHTGREY);
+            vertical.setStroke(Color.LIGHTGREY);
+
+            if (i == 1) {
+                horizontal.setStrokeWidth(3);
+                vertical.setStrokeWidth(3);
+            }
 
             coordinateSystem.getChildren().add(horizontal);
             coordinateSystem.getChildren().add(vertical);
         }
 
 
-        for (int i = 1; i < 20; i++) {
+        for (int i = 1; i < numberOfLines; i++) {
 
-            for (int j = 1; j < 20; j++) {
+            for (int j = 1; j < numberOfLines; j++) {
 
                 Circle circle = new Circle(i * distance, j * distance, r);
 
                 circle.setFill(Color.TRANSPARENT);
                 circle.setStroke(Color.TRANSPARENT);
-
-                circle.addEventHandler(MOUSE_CLICKED, e -> {
-                    if (e.getButton() == MouseButton.SECONDARY) {
-                        contextMenu.getItems().clear();
-
-                        String xPosition = df.format(circle.getCenterX() / distance - gridStart);
-                        String yPosition = df.format(circle.getCenterY() / distance - gridStart);
-                        String position = "x : " + xPosition + "\ty : " + yPosition;
-                        contextMenu.getItems().add(new MenuItem(position));
-                        contextMenu.show(circle, Side.RIGHT, 0, 0);
-                    }
-                });
-
 
                 circle.addEventHandler(MOUSE_CLICKED, e -> {
 
@@ -107,6 +108,16 @@ public class CoordinateSystemController implements Initializable {
                     if (circle != origin) {
                         circle.setStroke(Color.BLACK);
                     }
+
+                    String xPosition = df.format(circle.getCenterX() / distance - gridStart);
+                    String yPosition = df.format(circle.getCenterY() / distance - gridStart);
+                    String position = "x : " + xPosition + "  y : " + yPosition;
+
+
+                    infoBox.setText(position);
+                    infoBox.setLayoutX(circle.getCenterX() + circle.getRadius() + 10);
+                    infoBox.setLayoutY(circle.getCenterY() + circle.getRadius());
+
                 });
 
                 circle.addEventHandler(MOUSE_EXITED, e -> {
