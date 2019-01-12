@@ -15,7 +15,7 @@ public class GUI extends Application {
     public void start(Stage stage) throws Exception {
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/CoordinateSystem.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Main.fxml"));
 
         Pane root = fxmlLoader.load();
 

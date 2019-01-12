@@ -48,6 +48,6 @@
                 </Menu>
             </menus>
         </MenuBar>
-        <fx:include source="CoordinateSystem.fxml"/>
+        <fx:include source="CoordinateSystem.fxml" VBox.vgrow="ALWAYS"/>
     </children>
 </VBox>

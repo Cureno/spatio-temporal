@@ -155,6 +155,7 @@ public class CoordinateSystemController implements Initializable {
 
                             textRepresentation.addEventHandler(MOUSE_ENTERED, event -> {
                                 line.setStroke(Color.RED);
+                                listView.getSelectionModel().select(textRepresentation);
                             });
 
                             textRepresentation.addEventHandler(MOUSE_EXITED, event -> {
